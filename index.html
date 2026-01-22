@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Morefin Gateway</title>
+  <style>
+    :root{
+      --bg1:#0b0620;
+      --bg2:#120a2e;
+      --card:#130b2f;
+      --stroke:rgba(255,255,255,.10);
+      --text:#f4f0ff;
+      --muted:rgba(244,240,255,.75);
+      --accent:#9b5cff;
+      --accent2:#5a2cff;
+      --good:#5dffb0;
+      --bad:#ff6b8b;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(155,92,255,.35), transparent 55%),
+        radial-gradient(900px 600px at 90% 25%, rgba(90,44,255,.30), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .wrap{width:min(820px, 100%);}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+      opacity:.95;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .logo{
+      width:42px;height:42px; flex:0 0 auto;
+      filter: drop-shadow(0 10px 30px rgba(155,92,255,.25));
+    }
+    .brand h1{
+      font-size:16px;
+      margin:0;
+      line-height:1.2;
+      letter-spacing:.2px;
+    }
+    .brand .tag{
+      display:block;
+      margin-top:2px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .pill{
+      font-size:12px;
+      padding:8px 10px;
+      border:1px solid var(--stroke);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+
+    .card{
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    .header{
+      padding:18px 18px 0 18px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .title{
+      margin:0;
+      font-size:24px;
+      letter-spacing:.2px;
+    }
+
+    .content{
+      padding:12px 18px 18px 18px;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:15px;
+    }
+
+    .divider{
+      height:1px;
+      background:var(--stroke);
+      margin:0 18px;
+    }
+
+    .footer{
+      padding:16px 18px 18px 18px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    button{
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(135deg, rgba(155,92,255,.35), rgba(90,44,255,.35));
+      color:var(--text);
+      font-weight:700;
+      padding:12px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      box-shadow: 0 12px 30px rgba(155,92,255,.18);
+      flex:1 1 220px;
+    }
+    button:hover{
+      background: linear-gradient(135deg, rgba(155,92,255,.45), rgba(90,44,255,.45));
+    }
+
+    .ghost{
+      flex:0 0 auto;
+      font-size:12px;
+      color:var(--muted);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px dashed rgba(255,255,255,.16);
+      background:rgba(255,255,255,.03);
+    }
+
+    .bar{
+      margin:14px 0 8px;
+      height:12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      position:relative;
+    }
+    .fill{
+      height:100%;
+      width:94%;
+      background: linear-gradient(90deg, rgba(155,92,255,.55), rgba(90,44,255,.65));
+      position:relative;
+    }
+    .shine{
+      position:absolute;
+      top:0; left:-30%;
+      width:30%;
+      height:100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+      animation: shine 1.6s infinite linear;
+    }
+    @keyframes shine{
+      from{ left:-30%; }
+      to{ left:110%; }
+    }
+
+    ul{margin:10px 0 0 18px}
+    li{margin:6px 0}
+    .ok{color:rgba(93,255,176,.95)}
+    .no{color:rgba(255,107,139,.95)}
+    .bigline{font-size:16px; color:var(--text); font-weight:700}
+    .small{font-size:12px; color:rgba(244,240,255,.70)}
+    .badge{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:rgba(244,240,255,.75);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <!-- Built-in logo (SVG) -->
+        <svg class="logo" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Gateway Logo">
+          <defs>
+            <linearGradient id="g" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#9B5CFF"/>
+              <stop offset="1" stop-color="#5A2CFF"/>
+            </linearGradient>
+          </defs>
+          <path d="M32 6C18.2 6 7 17.2 7 31s11.2 25 25 25 25-11.2 25-25S45.8 6 32 6Z" fill="url(#g)" opacity=".92"/>
+          <path d="M20 28c0-6.6 5.4-12 12-12h12v8H32c-2.2 0-4 1.8-4 4v8c0 2.2 1.8 4 4 4h12v8H32c-6.6 0-12-5.4-12-12v-8Z" fill="white" opacity=".92"/>
+          <path d="M16 44h32" stroke="white" opacity=".35" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+
+        <div>
+          <h1>Morefin Gateway</h1>
+          <span class="tag">Unofficial Birthday Flow • Kris Edition</span>
+        </div>
+      </div>
+
+      <div class="pill" id="stepPill">Step 1 / 5</div>
+    </div>
+
+    <div class="card">
+      <div class="header">
+        <h2 class="title" id="title">Loading…</h2>
+        <span class="badge" id="badge">GATEWAY</span>
+      </div>
+
+      <div class="content" id="content"></div>
+
+      <div class="divider"></div>
+
+      <div class="footer">
+        <button id="btn">Continue</button>
+        <div class="ghost" id="hint">Tip: Try not to trigger GetAWAY mode.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px" class="small">
+      If you refresh, it stays on the same step (because… gateways).
+    </div>
+  </div>
+
+  <script>
+    const steps = {
+      1: {
+        pill: "Step 1 / 5",
+        badge: "GATEWAY",
+        title: "Morefin Gateway",
+        content: `
+          <div class="bigline">Initializing payment flow…</div>
+          Please wait.
+          <div class="bar">
+            <div class="fill"><div class="shine"></div></div>
+          </div>
+          <div class="small">(Born in 1994. Some things stay consistent.)</div>
+        `,
+        button: "Retry Gateway",
+        hint: "Status: waiting for 94% to become 95%…",
+        next: 2
+      },
+
+      2: {
+        pill: "Step 2 / 5",
+        badge: "REDIRECT",
+        title: "Gateway Error",
+        content: `
+          You’ve been redirected to:<br>
+          <span class="bigline">GetAWAY Mode</span>
+        `,
+        button: "Go Back to Gateway",
+        hint: "Redirect reason: HR typo propagation detected.",
+        next: 3
+      },
+
+      3: {
+        pill: "Step 3 / 5",
+        badge: "STATUS",
+        title: "Gateway Status Update",
+        content: `
+          <span class="bigline">
+            Happily, because of YOU and your great team,<br>
+            we won’t see this anymore.
+          </span>
+          <div class="small">(At least during working hours.)</div>
+        `,
+        button: "Proceed",
+        hint: "This message is approved by: Everyone who touches payments.",
+        next: 4
+      },
+
+      4: {
+        pill: "Step 4 / 5",
+        badge: "ADMIN",
+        title: "Head of GetAWAY – Official Panel",
+        content: `
+          <div class="bigline">Congratulations.</div>
+          You have reached <span class="bigline">Kris, the final BOSS.</span><br><br>
+          Responsibilities unlocked:
+          <ul>
+            <li class="ok">✔ Gateways</li>
+            <li class="ok">✔ Payments</li>
+            <li class="ok">✔ Driving your working cars</li>
+            <li class="no">✖ Actually going on a getaway</li>
+          </ul>
+        `,
+        button: "Approve Payment",
+        hint: "Admin rights detected. Please do not use them for evil.",
+        next: 5
+      },
+
+      5: {
+        pill: "Step 5 / 5",
+        badge: "RESULT",
+        title: "Payment Status",
+        content: `
+          <div class="bigline" style="color:var(--bad)">❌ Declined</div>
+          <div><strong>Reason:</strong><br>“It’s your birthday. Take a break.”</div>
+          <br>
+          <div class="small">
+            Happy Birthday, Kris 🎉<br>
+            Thanks for keeping our money flowing, and actually withstand us and our many requests!<br>
+            Now take our many happy wishes with you and <strong>GET THEM REAL!</strong>
+          </div>
+        `,
+        button: "Restart Flow",
+        hint: "Result: approved vacation request (unofficially).",
+        next: 1
+      }
+    };
+
+    function getStep(){
+      const url = new URL(location.href);
+      const s = parseInt(url.searchParams.get("step") || "1", 10);
+      return steps[s] ? s : 1;
+    }
+
+    function setStep(s){
+      const url = new URL(location.href);
+      url.searchParams.set("step", String(s));
+      history.replaceState({}, "", url);
+      render();
+    }
+
+    function render(){
+      const s = getStep();
+      const data = steps[s];
+      document.getElementById("stepPill").textContent = data.pill;
+      document.getElementById("badge").textContent = data.badge;
+      document.getElementById("title").textContent = data.title;
+      document.getElementById("content").innerHTML = data.content;
+      document.getElementById("btn").textContent = data.button;
+      document.getElementById("hint").textContent = data.hint;
+      document.getElementById("btn").onclick = () => setStep(data.next);
+    }
+
+    render();
+  </script>
+</body>
+</html>
